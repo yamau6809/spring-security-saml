@@ -142,9 +142,15 @@
     <bean id="metadata" class="org.springframework.security.saml.metadata.CachingMetadataManager">
         <constructor-arg>
             <list>
-                <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                    <constructor-arg>
-                        <value type="java.io.File">classpath:security/idp.xml</value>
+                <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                    <constructor-arg index="0" name="backgroundTaskTimer" type="java.util.Timer">
+                        <ref bean="btTimer"/>
+                    </constructor-arg>
+                    <constructor-arg index="1" name="client" type="org.apache.commons.httpclient.HttpClient">
+                        <ref bean="prxHttpClient"/>
+                    </constructor-arg>
+                    <constructor-arg index="2" name="metadataURL">
+                        <value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value>
                     </constructor-arg>
                     <property name="parserPool" ref="parserPool"/>
                 </bean>
@@ -285,4 +291,14 @@
 
     <bean id="parserPoolHolder" class="org.springframework.security.saml.parser.ParserPoolHolder"/>
 
+    <bean id="btTimer" class="java.util.Timer">
+        <constructor-arg>
+            <value type="java.lang.String">bttimer</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value type="java.lang.Boolean">true</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="prxHttpClient" class="org.springframework.security.saml.web.C1ProxyClient"/>
 </beans>
