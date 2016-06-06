@@ -300,5 +300,5 @@
         </constructor-arg>
     </bean>
 
-    <bean id="prxHttpClient" class="org.springframework.security.saml.web.C1ProxyClient"/>
+    <bean id="prxHttpClient" class="org.springframework.security.saml.web.ProxyHttpClient"/>
 </beans>
