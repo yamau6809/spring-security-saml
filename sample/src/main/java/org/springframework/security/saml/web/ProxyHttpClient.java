@@ -15,7 +15,7 @@ public class ProxyHttpClient extends HttpClient {
         super();
         log.info("Entering ProxyHttpClient Constructor");
         this.getHostConfiguration().setProxy("proxy.kdc.capitalone.com", 8099);
-        this.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials("arj866", "Natuki76"));
+        this.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials("arj866", "Hiromi65"));
         this.getParams().setAuthenticationPreemptive(true);
     }
 }
