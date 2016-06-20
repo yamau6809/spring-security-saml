@@ -25,13 +25,13 @@
                              default-target-url="/saml/web/metadata"/>
         <security:intercept-url pattern="/saml/web/metadata/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <security:intercept-url pattern="/saml/web/**" access="ROLE_ADMIN"/>
-        <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
+        <!--<security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>-->
     </security:http>
 
     <!-- Secured pages with SAML as entry point -->
     <security:http entry-point-ref="samlEntryPoint" use-expressions="false">
         <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-        <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
+        <!--<security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>-->
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
     </security:http>
 
@@ -153,6 +153,39 @@
                         <value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value>
                     </constructor-arg>
                     <property name="parserPool" ref="parserPool"/>
+                </bean>
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.ResourceBackedMetadataProvider">
+                            <constructor-arg>
+                                <bean class="java.util.Timer"/>
+                            </constructor-arg>
+                            <constructor-arg>
+                                <bean class="org.opensaml.util.resource.ClasspathResource">
+                                    <constructor-arg value="/metadata/urnc1coafdn1_sp.xml"/>
+                                </bean>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool"/>
+                        </bean>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                            <property name="local" value="true"/>
+                            <property name="alias" value="dn1"/>
+                            <property name="securityProfile" value="metaiop"/>
+                            <property name="sslSecurityProfile" value="pkix"/>
+                            <property name="sslHostnameVerification" value="default"/>
+                            <property name="signMetadata" value="false"/>
+                            <property name="signingKey" value="apollo"/>
+                            <property name="encryptionKey" value="apollo"/>
+                            <property name="requireArtifactResolveSigned" value="false"/>
+                            <property name="requireLogoutRequestSigned" value="false"/>
+                            <property name="requireLogoutResponseSigned" value="false"/>
+                            <property name="idpDiscoveryEnabled" value="true"/>
+                            <property name="idpDiscoveryURL" value="http://localhost:8080/spring-security-saml2-sample/saml/discovery/alias/dn1"/>
+                            <property name="idpDiscoveryResponseURL" value="http://localhost:8080/spring-security-saml2-sample/saml/login/alias/dn1?disco=true"/>
+                        </bean>
+                    </constructor-arg>
                 </bean>
             </list>
         </constructor-arg>
