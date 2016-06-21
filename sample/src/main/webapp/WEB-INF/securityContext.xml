@@ -142,17 +142,30 @@
     <bean id="metadata" class="org.springframework.security.saml.metadata.CachingMetadataManager">
         <constructor-arg>
             <list>
-                <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
-                    <constructor-arg index="0" name="backgroundTaskTimer" type="java.util.Timer">
-                        <ref bean="btTimer"/>
+                <!--<bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">-->
+                    <!--<constructor-arg index="0" name="backgroundTaskTimer" type="java.util.Timer">-->
+                        <!--<ref bean="btTimer"/>-->
+                    <!--</constructor-arg>-->
+                    <!--<constructor-arg index="1" name="client" type="org.apache.commons.httpclient.HttpClient">-->
+                        <!--<ref bean="prxHttpClient"/>-->
+                    <!--</constructor-arg>-->
+                    <!--<constructor-arg index="2" name="metadataURL">-->
+                        <!--<value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value>-->
+                    <!--</constructor-arg>-->
+                    <!--<property name="parserPool" ref="parserPool"/>-->
+                <!--</bean>-->
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+                            <constructor-arg>
+                                <value type="java.io.File">classpath:metadata/ssocircleIdp.xml</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool"/>
+                        </bean>
                     </constructor-arg>
-                    <constructor-arg index="1" name="client" type="org.apache.commons.httpclient.HttpClient">
-                        <ref bean="prxHttpClient"/>
+                    <constructor-arg>
+                        <bean class="org.springframework.security.saml.metadata.ExtendedMetadata"/>
                     </constructor-arg>
-                    <constructor-arg index="2" name="metadataURL">
-                        <value type="java.lang.String">http://idp.ssocircle.com/idp-meta.xml</value>
-                    </constructor-arg>
-                    <property name="parserPool" ref="parserPool"/>
                 </bean>
                 <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
                     <constructor-arg>
